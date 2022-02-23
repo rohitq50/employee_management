@@ -7,7 +7,7 @@
 			<employee-list :employees="employees" @getEmployee="getEmployee"/>
 		</div>
 		<div class="card-footer text-muted">
-			<pagination :page="page" :limit="limit" :list="employees"/>
+			<pagination :page="page" :limit="limit" :list="employees" @getEmployees="getEmployees"/>
 		</div>
 	</div>
 </template>
@@ -29,10 +29,31 @@ export default {
 		}
 	},
 	async created() {
-		this.employees = await this.$restApi.getEmployees(this.page, this.limit)
-		console.log(this.employees)
+		this.getEmployees(this.page)
 	},
 	methods: {
+		async getEmployees(page) {
+			let p = page
+			let l = this.limit
+			if(page == -1) {
+				p = null
+				l = null
+			}
+			let data = await this.$restApi.getEmployees(p, l)
+			// if(data.code != 200) {
+			// 	console.log(`Something went wrong, Error code: ${data.code}`)
+			// }
+			if(page == -1) {
+				console.log("here")
+				let length = data.length
+				this.page = (length / 10) + ((length % 10) != 0 ? 1 : 0)
+				data = data.slice(length - 10)
+			}
+			else {
+				this.page = page
+			}
+			this.employees = data
+		},
 		async getEmployee(id) {
 			// this.employee = await this.$restApi.getEmployee(id)
 		}

@@ -17,15 +17,10 @@ class Fetch {
 		else if (typeof data === "object" && Object.keys(data).length) {
 			urlEndpoint += "?" + this.encodeQueryData(data)
 		}
-		console.log(urlEndpoint)
+		// console.log(urlEndpoint)
 		let res = null;
 		await fetch(urlEndpoint, option)
-		.then(response => {
-			if(response.status == 200) {
-				return response.json()
-			}
-			return false
-		})
+		.then(response => response.json())
 		.then(data => res = data)
 		.catch((error) => {
 			console.error('Error:', error);

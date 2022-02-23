@@ -3,8 +3,12 @@ class RestApi {
 	constructor() {
 		this.fetchObject = new Fetch();
 	}
-	async getEmployees(page, limit) {
-		return await this.fetchObject.callApi("/employee", "GET", {p: page, l: limit})
+	async getEmployees(page = null, limit = null) {
+		let params = {}
+		if(page !== null && limit !== null){
+			params = {p: page, l: limit}
+		}
+		return await this.fetchObject.callApi("/employee", "GET", params)
 	}
 	async getEmployee(id) {
 		let url = "/employee/" + id
