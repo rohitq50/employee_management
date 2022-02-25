@@ -32,12 +32,8 @@ export default {
 	props: {},
 	data() {
 		return {
-			// svgNames: ["inbox-solid", "homeicon", "appsIcon", "user-group-solid", "calendarIcon", "fileicon", "settingsIcon"],
-			activePath: '/employee'
+			activePath: '/'
 		}
-	},
-	created() {
-		this.navigate(window.location.pathname)
 	},
 	methods: {
 		navigate(path) {
