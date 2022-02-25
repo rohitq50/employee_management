@@ -2,7 +2,7 @@
 	<div class="d-flex">
 		<div class="d-flex">
 			<label for="select-page" class="form-label">Show</label>
-			<select class="form-select form-select-sm" aria-label="select-page" @change="onChange($event)" v-model="currentPage">
+			<select class="form-select form-select-sm" aria-label="select-page" @change="onChange($event)" v-model="currentLimit">
 				<option v-for="p in pages" :key="p" :value="p" :disabled="lastPage && lastPage <= p">{{p}}</option>
 			</select>
 		</div>
@@ -38,6 +38,7 @@ export default {
 	},
 	data() {
 		return {
+			currentLimit: this.limit,
 			currentPage: 1,
 			hasMorePages: true,
 			lastPage: false
@@ -81,8 +82,8 @@ export default {
 			this.$emit("getEmployees", this.currentPage)
 		},
 		onChange(event) {
-			if(this.currentPage) {
-				this.$emit("getEmployees", this.currentPage)
+			if(this.currentLimit) {
+				this.$emit("changeLimit", this.currentLimit)
 			}
 		}
 	}

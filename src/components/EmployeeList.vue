@@ -52,6 +52,9 @@
 								<p>{{employee.phone}}</p>
 							</div>
 						</dir>
+						<a v-show="! showCheckin[employee.id]" type="button" class="mt-2 m-auto" @click="showCheckins(employee.id)">Veiw checkin details..</a>
+						<a  v-show="showCheckin[employee.id]" type="button" class="mt-2 m-auto" @click="hideCheckins(employee.id)">Hide checkin details..</a>
+						<checkin-list v-if="checkinsData[employee.id]" :checkins="checkinsData[employee.id]"/>
 					</td>
 				</tr>
 				</template>
@@ -61,12 +64,21 @@
 </template>
 
 <script>
+import CheckinList from './CheckinList.vue';
 import ProfilePicture from './ProfilePicture.vue';
 export default {
-  components: { ProfilePicture },
+  components: { ProfilePicture , CheckinList},
 	name: "EmployeeList",
 	props: {
 		employees: {
+			Type: Array,
+			require: true
+		},
+		checkedItems: {
+			Type: Array,
+			require: true
+		},
+		checkins: {
 			Type: Array,
 			require: true
 		}
@@ -75,6 +87,16 @@ export default {
 		return {
 			monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
 			checked: [],
+			showCheckin: [],
+			checkinsData: []
+		}
+	},
+	watch: {
+		checkedItems(newValue) {
+			this.checked = newValue
+		},
+		checked(newValue) {
+			this.$emit('updateCheckedItem', newValue)
 		}
 	},
 	methods: {
@@ -88,12 +110,22 @@ export default {
 		getEmployee(id) {
 			this.$emit("getEmployee", id)
 		},
+		showCheckins(id) {
+			this.showCheckin[id] = true;
+			this.$emit("getChekins", id)
+		},
 		getDepartment(department) {
 			const departments = []
 			for(let dep of department) {
 				departments.push(dep)
 			}
 			return departments.join(', ');
+		},
+		hideCheckins(id) {
+			this.showCheckin[id] = false;
+		},
+		getCheckins(id) {
+			return this.checkinsData[id]
 		}
 	}
 }
