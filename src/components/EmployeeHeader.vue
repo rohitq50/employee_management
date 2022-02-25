@@ -13,7 +13,7 @@
 		</div>
 		<div class="d-flex justify-content-between">
 			<div class="d-flex">
-				<input class="form-check-input mx-1 m-auto" type="checkbox" value=""><span :class="['ms-1 mx-4 m-auto txt-sm', checkedItems.length ? 'fw-bold': '']">{{checkedItems.length}} Selected</span>
+				<input class="form-check-input mx-1 m-auto" type="checkbox" v-model="selectAllCheckboxEnable" onclick="return false" /><span :class="['ms-1 mx-4 m-auto txt-sm', checkedItems.length ? 'fw-bold': '']">{{checkedItems.length}} Selected</span>
 				<p type="button" class="txt-sm mx-4 m-auto" @click="selectAll()">Select All</p>
 				<div class="d-flex mx-4">
 					<img src='../assets/shareIcon.svg' class="svg-bg image-small">
@@ -39,7 +39,7 @@
 					<p type="button" class="txt-sm ms-1 m-auto" @click="sort()">Sort by</p>
 				</div>
 				<select class="form-select form-select-sm mx-1" aria-label="select-column" @change="onChange($event)" v-model="selectedColumn">
-					<option v-for="(column, index) in columns" :key="index" :value="column">{{index}}</option>
+					<option v-for="(column, index) in $constant.COLUMNS" :key="index" :value="column">{{index}}</option>
 				</select>
 			</div>
 		</div>
@@ -57,10 +57,15 @@ export default {
 	data() {
 		return {
 			selectedColumn: "createdAt",
-			columns: {ID: "id", Name: "name", Email: "email", Department: "department", Experience: "createdAt"},
 			selectAllFlag: false,
 			sortAscFlag: true,
+			selectAllCheckboxEnable: false,
 			searchText: ""
+		}
+	},
+	watch: {
+		checkedItems(newValue) {
+			this.selectAllCheckboxEnable = newValue.length ? true : false
 		}
 	},
 	methods: {
