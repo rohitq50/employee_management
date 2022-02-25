@@ -60,7 +60,7 @@ export default {
 	width: 50%;
 }
 .active {
-	background-color:rgb(252, 252, 252) !important;
+	background-color: #6499dc !important;
 	border-radius: 10px;
 }
 </style>

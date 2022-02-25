@@ -5,7 +5,7 @@
 		</div>
 		<div class="flex-grow-1" >
 			<navbar />
-			<router-view @setVertical="vertical = true"/>
+			<router-view />
 		</div>
 	</div>
 </template>
@@ -16,24 +16,14 @@ import Navbar from '@/components/Navbar.vue'
 export default {
 	name: 'App',
 	components: { SideBar, Navbar},
-	data() {
-		return {
-			vertical: false
-		}
-	},
-	watch:{
-    	$route (){
-			//to, from
-			//set here the initial value for new routes
-        	this.vertical = false
-    	}
-	} ,
-	methods: {
-	}
 }
 </script>
+
 <style lang="scss">
 .sidebar {
 	width: 4rem;
+}
+.light-blue {
+	color: #6499dc !important;
 }
 </style>

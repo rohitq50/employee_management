@@ -8,7 +8,7 @@
 				</div>
 			</div>
 			<div class="d-flex">
-				<p type="button" class="txt-sm me-1 mt-1">+ Add Employee</p>
+				<p type="button" class="txt-sm me-1 mt-1 light-blue">+ Add Employee</p>
 			</div>
 		</div>
 		<div class="d-flex justify-content-between">

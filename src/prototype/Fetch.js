@@ -1,4 +1,4 @@
-class Fetch {
+class Fetch{
 	constructor() {
 		this.BASE_URL = "https://620dfdda20ac3a4eedcf5a52.mockapi.io/api";
 	}
@@ -17,13 +17,12 @@ class Fetch {
 		else if (typeof data === "object" && Object.keys(data).length) {
 			urlEndpoint += "?" + this.encodeQueryData(data)
 		}
-		// console.log(urlEndpoint)
 		let res = null;
 		await fetch(urlEndpoint, option)
-		.then(response => response.json())
+		.then(this.checkError)
 		.then(data => res = data)
 		.catch((error) => {
-			console.error('Error:', error);
+			alert('Error:'+ error);
 		});
 		return res;
 	}
@@ -34,6 +33,14 @@ class Fetch {
 			params.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
 		}
 		return params.join('&');
-	 }
+	}
+
+	checkError(response) {
+		if (response.status == 200 || response.status == 201) {
+			return response.json();
+		} else {
+			throw Error(response.statusText +": "+ response.statusText);
+		}
+	}
 }
 export default Fetch;

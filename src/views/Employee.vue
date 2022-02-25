@@ -1,24 +1,36 @@
 <template>
 	<div class="card text-center">
 		<div class="card-header">
-			<employee-header :checkedItems="checkedItems" @selectAll="selectAll" @sortList="sortList" @searchList="searchList"/>
+			<employee-header
+				:checkedItems="checkedItems"
+				@selectAll="selectAll"
+				@sortList="sortList"
+				@searchList="searchList"
+			/>
 		</div>
 		<div class="card-body">
 			<employee-list
 				:employees="employees"
 				:checkedItems="checkedItems"
 				:checkins="checkins"
+				:sortBy="sortBy"
 				@getEmployee="getEmployee"
 				@updateCheckedItem="updateCheckedItem"
 				@getChekins="getChekins"
+				@getChekin="getChekin"
 			/>
 		</div>
 		<div class="card-footer text-muted">
-			<pagination :page="page" :limit="limit" :list="employees" @getEmployees="getEmployees" @changeLimit="changeLimit"/>
+			<pagination
+				:page="page"
+				:limit="limit"
+				:list="employees"
+				@getEmployees="getEmployees"
+				@changeLimit="changeLimit"
+			/>
 		</div>
 	</div>
 </template>
-
 
 <script>
 import EmployeeHeader from '../components/EmployeeHeader.vue'
@@ -29,7 +41,7 @@ export default {
 	name: "Employee",
 	data() {
 		return {
-			employees: [],
+			employees: null,
 			employee: {},
 			checkins: [],
 			page: 1,
@@ -37,7 +49,7 @@ export default {
 			checkedItems: [],
 			sortBy: null,
 			searchStr: null,
-			order: "acs"
+			order: "acs",
 		}
 	},
 	async created() {
@@ -48,19 +60,26 @@ export default {
 			this.employees = await this.getEmployeeList(page)
 		},
 		async getEmployee(id) {
+			// Not required actually because the data is same in list.
 			// this.employee = await this.$restApi.getEmployee(id)
 		},
-		async sortList(column, order) {
-			this.employees = await this.getEmployeeList(this.page, this.limit, column, order)
+		async sortList(sortBy, order) {
+			this.sortBy = sortBy
+			this.employees = await this.getEmployeeList(this.page, this.limit, sortBy, order)
 		},
 		async searchList(searchStr) {
-			this.employees = await this.getEmployeeList(this.page, this.limit, this.column, this.order, searchStr)
+			this.searchStr = searchStr
+			this.employees = await this.getEmployeeList(this.page, this.limit, this.sortBy, this.order, searchStr)
 		},
 		async getChekins(employeeId) {
 			if( ! this.checkins[employeeId]) {
 				// Only fetch for new data
-				this.checkins[employeeId] = await this.$restApi.getEmployeeCheckins(employeeId)
+				let data = await this.$restApi.getEmployeeCheckins(employeeId)
+				this.$set(this.checkins, employeeId, data)
 			}
+		},
+		async getChekin(employeeId, checkinId) {
+			// let data = await this.$restApi.getEmployeeCheckin(employeeId, checkinId)
 		},
 		changeLimit(newLimit) {
 			this.limit = newLimit
@@ -88,10 +107,7 @@ export default {
 				params.search = searchStr
 			}
 			let data = await this.$restApi.getEmployees(params)
-			// if(data.code != 200) {
-			// 	console.log(`Something went wrong, Error code: ${data.code}`)
-			// }
-			if(page == -1) {
+			if(page == -1) {  // if user selected the last page
 				let length = data.length
 				this.page = (length / 10) + ((length % 10) != 0 ? 1 : 0)
 				data = data.slice(length - 10)

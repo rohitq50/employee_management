@@ -7,7 +7,7 @@
 			<img src='../assets/messageIcon.svg' class="px-1 me-1 svg-bg">
 			<img src='../assets/alarm.svg' class="px-1 me-2 svg-bg">
 			<ProfilePicture imageUrl="http://placeimg.com/640/480" classes="d-flex" :showStatus="false"/>
-			<button class="btn" >&#8964;</button>
+			<p type="button" class="light-blue" >&#8964;</p>
 		</div>
 	</header>
 </template>
@@ -41,6 +41,9 @@ header {
 	}
 	button {
 		padding: 0.1rem 0.5rem;
+	}
+	.light-blue {
+		color: #6499dc;
 	}
 }
 </style>

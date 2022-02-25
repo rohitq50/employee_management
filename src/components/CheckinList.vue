@@ -2,21 +2,20 @@
 	<table class="table table-hover">
 		<thead>
 			<tr>
-				<th>Checking id :</th>
+				<th>Id :</th>
 				<th>Location :</th>
 				<th>Purpose :</th>
 				<th>Checkin at:</th>
 			</tr>
 		</thead>
 		<tbody>
-			<template v-for="(checkin,i) in checkins">
-			<tr :key="i" @click="getChekin(checkin.id)">
+			<tr v-if="checkins.length == 0">No record!</tr>
+			<tr class="pointer" else v-for="(checkin,i) in checkins" :key="i" @click="getChekin(checkin.employeeId, checkin.id)">
 				<td>{{checkin.id}}</td>
 				<td>{{checkin.location}}</td>
 				<td>{{checkin.purpose}}</td>
 				<td>{{getDate(checkin.checkin)}}</td>
 			</tr>
-			</template>
 		</tbody>
 	</table>
 </template>
@@ -32,16 +31,22 @@ export default {
 	},
 	data() {
 		return {
-			monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
 		}
 	},
 	methods: {
 		getDate(date) {
-			return new Date(date).getDate() +" "+ this.monthNames[new Date(date).getMonth()]
+			// Get local date & time
+			return new Date(date).toLocaleDateString() + " " + new Date(date).getHours() + ":" + new Date(date).getMinutes() + ":" + new Date(date).getSeconds()
 		},
-		getChekin(id) {
-			this.$emit("getChekin", id)
+		getChekin(employeeId, id) {
+			this.$emit("getChekin", employeeId, id)
 		},
 	}
 }
 </script>
+
+<style lang="scss" scoped>
+.pointer {
+	cursor: pointer;
+}
+</style>

@@ -3,15 +3,15 @@
 		<div class="d-flex">
 			<label for="select-page" class="form-label">Show</label>
 			<select class="form-select form-select-sm" aria-label="select-page" @change="onChange($event)" v-model="currentLimit">
-				<option v-for="p in pages" :key="p" :value="p" :disabled="lastPage && lastPage <= p">{{p}}</option>
+				<option v-for="p in maxLimit" :key="p" :value="p" :disabled="lastPage && lastPage <= p">{{p}}</option>
 			</select>
 		</div>
 		<div class="d-flex">
-			<button type="button" class="btn btn-sm btn-light ms-1" @click="navigatePage(0, 1)">&lt;&lt;</button>
-			<button type="button" class="btn btn-sm btn-light ms-1 me-1" @click="navigatePage(-1)">&lt;</button>
-			<button v-for="page in pages" :key="page" :disabled="lastPage && lastPage <= page" type="button" class="btn btn-sm btn-light ms-1" @click="navigatePage(0, page)">{{page}}</button>
-			<button :disable=" ! hasMorePages" type="button" class="btn btn-sm btn-light ms-2" @click="navigatePage(1)">&gt;</button>
-			<button :disable=" ! hasMorePages" type="button" class="btn btn-sm btn-light ms-1" @click="navigatePage(0, -1)">&gt;&gt;</button>
+			<button :disabled="currentPage == 1" type="button" :class="['btn btn-sm btn-light ms-1',  currentPage != 1 ? 'light-blue' : ''] " @click="navigatePage(0, 1)">&lt;&lt;</button>
+			<button :disabled="currentPage == 1" type="button" :class="['btn btn-sm btn-light ms-1 me-1', currentPage != 1 ? 'light-blue' : '']" @click="navigatePage(-1)">&lt;</button>
+			<button v-for="page in pages" :key="page" :disabled="lastPage && lastPage <= page" type="button" :class="['btn btn-sm btn-light ms-1 light-blue', currentPage == page ? 'active' : '']" @click="navigatePage(0, page)">{{page}}</button>
+			<button :disabled=" ! hasMorePages" type="button" :class="['btn btn-sm btn-light ms-2',  hasMorePages ? 'light-blue' : '']" @click="navigatePage(1)">&gt;</button>
+			<button :disabled=" ! hasMorePages" type="button" :class="['btn btn-sm btn-light ms-1',  hasMorePages ? 'light-blue' : '']" @click="navigatePage(0, -1)">&gt;&gt;</button>
 		</div>
 		<div class="d-flex">
 			<label for="jump-to-page" class="form-label">Jump to</label>
@@ -41,7 +41,8 @@ export default {
 			currentLimit: this.limit,
 			currentPage: 1,
 			hasMorePages: true,
-			lastPage: false
+			lastPage: false,
+			maxLimit: 20
 		}
 	},
 	watch: {
@@ -100,5 +101,8 @@ label {
 .jump-input {
 	width: 65px !important;
 	padding: 0 !important;
+}
+.active, .btn:hover {
+  border-color: #6499dc;
 }
 </style>
