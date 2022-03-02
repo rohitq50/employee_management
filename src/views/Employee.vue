@@ -6,6 +6,7 @@
 				@selectAll="selectAll"
 				@sortList="sortList"
 				@searchList="searchList"
+				@openFilterModal="openFilterModal"
 			/>
 		</div>
 		<div class="card-body">
@@ -49,6 +50,7 @@ export default {
 			checkedItems: [],
 			sortBy: null,
 			searchStr: null,
+			filterData: [],
 			order: "acs",
 		}
 	},
@@ -81,6 +83,10 @@ export default {
 		async getChekin(employeeId, checkinId) {
 			// let data = await this.$restApi.getEmployeeCheckin(employeeId, checkinId)
 		},
+		async openFilterModal(filterColumn, data) {
+			this.filterData = {column: filterColumn, data: data}
+			this.employees = await this.getEmployeeList(this.page, this.limit, this.sortBy, this.order, this.searchStr, this.filterData)
+		},
 		changeLimit(newLimit) {
 			this.limit = newLimit
 			this.getEmployees(this.page)
@@ -91,7 +97,7 @@ export default {
 		selectAll(flag) {
 			this.checkedItems = flag ? this.employees.map((item,index) => index) : []
 		},
-		async getEmployeeList(page = this.page, limit = this.limit, sortBy = this.sortBy, order = this.order, searchStr = this.searchStr) {
+		async getEmployeeList(page = this.page, limit = this.limit, sortBy = this.sortBy, order = this.order, searchStr = this.searchStr, filterData = this.filterData) {
 			let params = {}
 			if(page != -1) {
 				params.p = page
@@ -105,6 +111,9 @@ export default {
 			}
 			if(searchStr !== null) {
 				params.search = searchStr
+			}
+			if(filterData.length != 0) {
+				params[filterData.column] = filterData.data
 			}
 			let data = await this.$restApi.getEmployees(params)
 			if(page == -1) {  // if user selected the last page

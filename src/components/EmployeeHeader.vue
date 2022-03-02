@@ -31,7 +31,7 @@
 			<div class="d-flex">
 				<div class="d-flex mx-3">
 					<img src='../assets/filter.svg' class="svg-bg image-small">
-					<p type="button" class="txt-sm ms-1 m-auto" @click="filter()">Filter</p>
+					<p type="button" class="txt-sm ms-1 m-auto" @click="filter()" data-bs-toggle="modal" data-bs-target="#filter-madal">Filter</p>
 					<!-- Note: Filter not clear to me -->
 				</div>
 				<div class="d-flex mx-4">
@@ -41,6 +41,27 @@
 				<select class="form-select form-select-sm mx-1" aria-label="select-column" @change="onChange($event)" v-model="selectedColumn">
 					<option v-for="(column, index) in $constant.COLUMNS" :key="index" :value="column">{{index}}</option>
 				</select>
+			</div>
+		</div>
+		<div>
+			<div class="modal fade" id="filter-madal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Filter</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<input class="form-check-input m-2" type="checkbox" value="a" v-model="filterData"/><span>A</span>
+						<input class="form-check-input m-2" type="checkbox" value="b" v-model="filterData"/><span>B</span>
+						<input class="form-check-input m-2" type="checkbox" value="c" v-model="filterData"/><span>C</span>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary" @click="filterList">Go</button>
+					</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -60,7 +81,8 @@ export default {
 			selectAllFlag: false,
 			sortAscFlag: true,
 			selectAllCheckboxEnable: false,
-			searchText: ""
+			searchText: "",
+			filterData: []
 		}
 	},
 	watch: {
@@ -74,7 +96,11 @@ export default {
 			this.$emit('selectAll', this.selectAllFlag)
 		},
 		filter() {
-			// Filter not clear to me
+			this.$emit('openFilterModal')
+		},
+		filterList() {
+			let filterColumn = "department"
+			this.$emit('openFilterModal', filterColumn, this.filterData)
 		},
 		sort() {
 			if(this.selectedColumn == "") {
